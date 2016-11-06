@@ -1,6 +1,8 @@
 $(document).ready(function() {
   var sigmaIndex = 0;
   var numSigmas = 0;
+  var fade = 800;
+
   //need to get ajax array info for these
   $('#previous').on('click', function(){
       if(sigmaIndex == 0){
@@ -9,7 +11,8 @@ $(document).ready(function() {
         sigmaIndex--;
       }
       highlight(sigmaIndex);
-      displayDetails($('#sigmaNumber' + sigmaIndex).data().details);
+      $('#info').fadeOut(fade, displayDetails);
+
   });
   $('#next').on('click', function(){
       if(sigmaIndex == 17){
@@ -18,7 +21,7 @@ $(document).ready(function() {
         sigmaIndex++;
       }
       highlight(sigmaIndex);
-      displayDetails($('#sigmaNumber' + sigmaIndex).data().details);
+      $('#info').fadeOut(fade, displayDetails);
   });
 
   $.ajax({
@@ -28,10 +31,11 @@ $(document).ready(function() {
     success: function(sigmas) {
       numSigmas = sigmas.sigmanauts.length - 1;
       console.log(sigmas.sigmanauts);
-      displayDetails(sigmas.sigmanauts[sigmaIndex]);
+
 
       displayIndex(sigmas.sigmanauts);
       highlight(sigmaIndex);
+      displayDetails(sigmas.sigmanauts[sigmaIndex]);
     },
 
     error: function() {
@@ -40,12 +44,14 @@ $(document).ready(function() {
 
   });
 
-  function displayDetails(oneSigma) {
+  function displayDetails() {
+    var sigmaData =$('#sigmaNumber' + sigmaIndex).data().details;
     var $el = $('#info');
     $el.children().remove();
-    $el.append('<h1>' + oneSigma.name + '</h1>');
-    $el.append('<a href = https://github.com/' + oneSigma.git_username + '>https://github.com/' + oneSigma.git_username + '</a>');
-    $el.append('<p>' + oneSigma.shoutout + '</p>');
+    $el.append('<h1>' + sigmaData.name + '</h1>');
+    $el.append('<a href = https://github.com/' + sigmaData.git_username + '>https://github.com/' + sigmaData.git_username + '</a>');
+    $el.append('<p>' + sigmaData.shoutout + '</p>');
+    $el.fadeIn(fade);
   }
 
   function highlight(i) {
