@@ -1,65 +1,81 @@
 $(document).ready(function() {
   var sigmaIndex = 0;
   var numSigmas = 0;
-  var fade = 800;
+  var fadeTime = 400;
+  var enableButtons = function(){
+    $('input').removeAttr('disabled');
+  };
+  var updateTime = 10000;
+  var autoUpdate = setTimeout(nextSig, updateTime);
 
-  //need to get ajax array info for these
   $('#previous').on('click', function(){
+    clearTimeout(autoUpdate);
+    $('input').attr('disabled', true)
       if(sigmaIndex == 0){
-        sigmaIndex = 17;
+        sigmaIndex = numSigmas;
       } else {
         sigmaIndex--;
       }
       highlight(sigmaIndex);
-      $('#info').fadeOut(fade, displayDetails);
+      console.log(sigmaIndex);
+      $('#info').fadeOut(fadeTime, displayDetails);
+      autoUpdate = setTimeout(nextSig, updateTime);
+  });
 
-  });
   $('#next').on('click', function(){
-      if(sigmaIndex == 17){
-        sigmaIndex = 0;
-      } else {
-        sigmaIndex++;
-      }
-      highlight(sigmaIndex);
-      $('#info').fadeOut(fade, displayDetails);
+    clearTimeout(autoUpdate);
+      nextSig();
   });
+
+  function nextSig() {
+
+    $('input').attr('disabled', true);
+    if(sigmaIndex == numSigmas){
+      sigmaIndex = 0;
+    } else {
+      sigmaIndex++;
+    }
+    highlight(sigmaIndex);
+    $('#info').fadeOut(fadeTime, displayDetails);
+    autoUpdate = setTimeout(nextSig, updateTime);
+  }
 
   $.ajax({
     type: 'GET',
     url: '/data',
-
     success: function(sigmas) {
-      numSigmas = sigmas.sigmanauts.length - 1;
-      console.log(sigmas.sigmanauts);
-
-
+      numSigmas = sigmas.sigmanauts.length - 2;
       displayIndex(sigmas.sigmanauts);
-      highlight(sigmaIndex);
-      displayDetails(sigmas.sigmanauts[sigmaIndex]);
-    },
+      console.log(numSigmas);
+      updateDom();
 
+    },
     error: function() {
       console.log('Error with request');
     }
-
   });
 
+  function updateDom() {
+    highlight();
+    displayDetails();
+  }
+
   function displayDetails() {
-    var sigmaData =$('#sigmaNumber' + sigmaIndex).data().details;
+    var sigmaData = $('#sigmaNumber' + sigmaIndex).data().details;
     var $el = $('#info');
     $el.children().remove();
     $el.append('<h1>' + sigmaData.name + '</h1>');
     $el.append('<a href = https://github.com/' + sigmaData.git_username + '>https://github.com/' + sigmaData.git_username + '</a>');
-    $el.append('<p>' + sigmaData.shoutout + '</p>');
-    $el.fadeIn(fade);
+    $el.append("<h3>SIGMA SHOUTOUT:</h3><p>" + sigmaData.shoutout + '</p>');
+    $el.fadeIn(fadeTime, enableButtons);
   }
 
-  function highlight(i) {
+  function highlight() {
+    var i = sigmaIndex;
     $('td').text(' ');
-    $('td').removeClass();
+    $('td').removeAttr('class');
     $('#sigmaNumber' + i).text('Σ');
     $('#sigmaNumber' + i).attr('class', 'fade');
-    console.log(i);
   }
 
   function displayIndex(sigmanauts){
@@ -71,7 +87,8 @@ $(document).ready(function() {
       var $el = $('.number').last();
       $el.append('<td id="sigmaNumber' + i + '">&#x03A3</td>');
       $el.children().last().data( "details", sigmanauts[i]);
-
     }
   }
+
+
 });
