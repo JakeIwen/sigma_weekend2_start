@@ -96,12 +96,12 @@ $(document).ready(function() {
   }
 
   function displayIndex(sigmanauts){
-    $('#indexPoints').append('<tbody></tbody>');
     for(var i = 0; i < sigmanauts.length; i++) {
-      if(i % 10 == 0) {
-        $('tbody').append('<tr class="number"></tr>');
+      if(i % 10 == 0)
+        //new table for each new row to allow for centering of rows with less than 10 elements
+        $('#tables').append('<table><tr></tr></table>');
       }
-      var $el = $('.number').last();
+      var $el = $('tr').last();
       $el.append('<td id="sigmaNumber' + i + '">&#x03A3</td>');
       $el.children().last().data( "details", sigmanauts[i]);
     }
