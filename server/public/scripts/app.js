@@ -8,18 +8,22 @@ $(document).ready(function() {
   var updateTime = 10000;
   var autoUpdate = setTimeout(nextSig, updateTime);
 
+  $( "body" ).keydown(function() {
+    switch (event.keyCode) {
+      case 37:
+        clearTimeout(autoUpdate);
+        prevSig();
+        break;
+      case 39:
+        clearTimeout(autoUpdate);
+        nextSig();
+        break;
+      }
+  });
+
   $('#previous').on('click', function(){
     clearTimeout(autoUpdate);
-    $('input').attr('disabled', true)
-      if(sigmaIndex == 0){
-        sigmaIndex = numSigmas;
-      } else {
-        sigmaIndex--;
-      }
-      highlight(sigmaIndex);
-      console.log(sigmaIndex);
-      $('#info').fadeOut(fadeTime, displayDetails);
-      autoUpdate = setTimeout(nextSig, updateTime);
+    prevSig();
   });
 
   $('#next').on('click', function(){
@@ -27,8 +31,21 @@ $(document).ready(function() {
       nextSig();
   });
 
-  function nextSig() {
+  function prevSig(){
+    $('input').attr('disabled', true)
+    if(sigmaIndex == 0) {
+      sigmaIndex = numSigmas;
+      console.log(sigmaIndex);
+    } else {
+      sigmaIndex--;
+    }
+    highlight(sigmaIndex);
+    console.log(sigmaIndex);
+    $('#info').fadeOut(fadeTime, displayDetails);
+    autoUpdate = setTimeout(nextSig, updateTime);
+  }
 
+  function nextSig() {
     $('input').attr('disabled', true);
     if(sigmaIndex == numSigmas){
       sigmaIndex = 0;
@@ -44,11 +61,11 @@ $(document).ready(function() {
     type: 'GET',
     url: '/data',
     success: function(sigmas) {
-      numSigmas = sigmas.sigmanauts.length - 2;
+      numSigmas = sigmas.sigmanauts.length - 1;
       displayIndex(sigmas.sigmanauts);
       console.log(numSigmas);
+      console.log(sigmas.sigmanauts[numSigmas]);
       updateDom();
-
     },
     error: function() {
       console.log('Error with request');
@@ -80,8 +97,8 @@ $(document).ready(function() {
 
   function displayIndex(sigmanauts){
     $('#indexPoints').append('<tbody></tbody>');
-    for(var i = 0; i < sigmanauts.length-1; i++) {
-      if(i % 9 == 0) {
+    for(var i = 0; i < sigmanauts.length; i++) {
+      if(i % 10 == 0) {
         $('tbody').append('<tr class="number"></tr>');
       }
       var $el = $('.number').last();
