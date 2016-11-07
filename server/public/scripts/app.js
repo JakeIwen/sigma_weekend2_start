@@ -96,16 +96,17 @@ $(document).ready(function() {
   }
 
   function displayIndex(sigmanauts){
+    var j=1;
+    var k = 1;
+    $('#tables').append('<table><tr></tr></table>');
     for(var i = 0; i < sigmanauts.length; i++) {
-      if(i % 10 == 0)
-        //new table for each new row to allow for centering of rows with less than 10 elements
+      if(i == j) {
         $('#tables').append('<table><tr></tr></table>');
+        j += ++k;
       }
       var $el = $('tr').last();
       $el.append('<td id="sigmaNumber' + i + '">&#x03A3</td>');
       $el.children().last().data( "details", sigmanauts[i]);
     }
   }
-
-
 });

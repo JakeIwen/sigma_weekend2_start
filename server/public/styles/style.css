@@ -4,12 +4,12 @@ html {
 body {
   background-color: #9a3e3e;
   align-content: center;
-  padding: 20px;
+  padding: 30px;
   font-size: 16px;
   border: solid black 2px;
   border-radius: 12px;
   font-family: 'Rokkitt', sans-serif;
-  max-width: 1100px;
+  display: inline-block;
 }
 #cohort {
   padding-left: 20px;
@@ -32,12 +32,12 @@ h1 {
   font-size: 3em;
 }
 td {
-  height: 100px;
-  width: 100px;
-  border-radius: 50px;
+  height: 50px;
+  width: 50px;
+  border-radius: 28px;
   border: solid black 3px;
   text-align: center;
-  font-size: 5em;
+  font-size: 2.5em;
   font-weight: bold;
   background-color: rgb(200, 200, 200);
 
@@ -65,9 +65,6 @@ p {
   padding: 10px;
   margin-top: 0;
 }
-tbody {
-  margin: auto;
-}
 
 h3 {
   border-top: 2px solid black;
@@ -77,6 +74,10 @@ h3 {
 }
 table {
   margin: auto;
+  padding-left: 40px;
+}
+.sections {
+  display:inline-block;
 }
 
 /***for index background***/
